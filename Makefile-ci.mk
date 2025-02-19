@@ -25,7 +25,7 @@ release-pr: | $(GIT_CHGLOG) $(GOTAGGER)
 	@git checkout -b "release-$(VERSION)"
 	@cd $(ROOT) && $(GIT_CHGLOG) -o CHANGELOG.md --next-tag $(VERSION) --sort=semver
 	@git add CHANGELOG.md
-	@git commit -m "release: $(VERSION)"
+	@git commit -s -m "release: $(VERSION)"
 	@git push origin "release-$(VERSION)"
 
 
