@@ -1,0 +1,50 @@
+name: coverage
+on:
+  pull_request:
+  push:
+    branches:
+      # It's important that the action also runs on merge to main
+      - main
+
+jobs:
+  coverage:
+    permissions:
+      contents: write
+      pull-requests: write
+    name: Caculate coverage on go ${{ matrix.go_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        go_version: [stable]
+        os: [ubuntu-latest]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4.2.2
+        with:
+          # default fetch-depth is insufficient to find previous coverage notes
+          fetch-depth: 10
+
+      - name: Set up Go ${{ matrix.go_version }}
+        uses: actions/setup-go@v5.3.0
+        with:
+          go-version: ${{ matrix.go_version }}
+
+      - name: Calculate coverage
+        uses: gwatts/go-coverage-action@v2.0.0
+        id: coverage
+        with:
+          # Optional coverage threshold
+          # use fail-coverage to determine what should happen below this threshold
+          coverage-threshold: 80
+
+          cover-mode: 'atomic'
+
+          # collect coverage for all packages beyond the one under test
+          cover-pkg: ./...
+
+          notes-ref: 'gocoverage-${{ matrix.go_version }}-${{ matrix.os }}'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 'go-coverage'
+          path: ${{ steps.coverage.outputs.report-pathname }}
