@@ -93,6 +93,16 @@ func Test_CollectErrors_no_elements(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func Test_ContainsAll(t *testing.T) {
+	haystack := []string{"one", "two", "three", "four", "five"}
+	presentNeedles := []string{"one", "three", "four"}
+	absentNeedles1 := []string{"one", "two", "three", "four", "five", "six"}
+	absentNeedles2 := []string{"one", "six"}
+	require.True(t, sliceutils.ContainsAll(haystack, presentNeedles))
+	require.False(t, sliceutils.ContainsAll(haystack, absentNeedles1))
+	require.False(t, sliceutils.ContainsAll(haystack, absentNeedles2))
+}
+
 func Test_Detect_error(t *testing.T) {
 	expectedMessage := `failed DETECT filter`
 	filter := newFailingFilter[string](expectedMessage)
@@ -281,6 +291,13 @@ func Test_Disjoint_empty(t *testing.T) {
 	actual := sliceutils.Disjoint(left, right)
 	require.NotNil(t, actual.MustGet())
 	require.Empty(t, actual.MustGet())
+}
+
+func Test_Duplicate(t *testing.T) {
+	src := []int{1, 2, 3}
+	dst := sliceutils.Duplicate(src)
+	require.Equal(t, src, dst)
+	require.NotSame(t, &src[0], &dst[0])
 }
 
 func Test_FirstError(t *testing.T) {
