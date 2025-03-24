@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/sassoftware/sas-ggdk/pkg/result"
@@ -52,4 +53,18 @@ func UnmarshalFromReader(reader io.Reader, instance any) error {
 		return err
 	}
 	return nil
+}
+
+// LoadAs reads the content from the given path and ummarshals it into a result
+// of a new instance of T.
+func LoadAs[T any](path string) result.Result[T] {
+	content := result.New(os.ReadFile(path))
+	return result.FlatMap(UnmarshalAs[T], content)
+}
+
+// UnmarshalAs ummarshals the given content into a result of anew instance of T.
+func UnmarshalAs[T any](content []byte) result.Result[T] {
+	var t T
+	err := json.Unmarshal(content, &t)
+	return result.New(t, err)
 }

@@ -108,6 +108,60 @@ func Test_UnmarshalFromReader_failingUnmarshal(t *testing.T) {
 	require.Error(t, err)
 }
 
+func Test_LoadAs(t *testing.T) {
+	expected := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	actual := jsonutils.LoadAs[person](toTestdataFilename(jsonFilename))
+	require.False(t, actual.IsError())
+	require.Equal(t, expected, actual.MustGet())
+}
+
+func Test_LoadAs_ptr(t *testing.T) {
+	expectedPtr := &person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	actualPtr := jsonutils.LoadAs[*person](toTestdataFilename(jsonFilename))
+	require.False(t, actualPtr.IsError())
+	require.Equal(t, expectedPtr, actualPtr.MustGet())
+}
+
+func Test_LoadAs_fail(t *testing.T) {
+	actual := jsonutils.LoadAs[person](toTestdataFilename("missing.json"))
+	require.True(t, actual.IsError())
+}
+
+func Test_UnmarshalAs(t *testing.T) {
+	expectedPtr := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	content, err := readTestdata(jsonFilename)
+	require.NoError(t, err)
+	actualPtr := jsonutils.UnmarshalAs[person](content)
+	require.False(t, actualPtr.IsError())
+	require.Equal(t, expectedPtr, actualPtr.MustGet())
+}
+
+func Test_UnmarshalAs_ptr(t *testing.T) {
+	expectedPtr := &person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	content, err := readTestdata(jsonFilename)
+	require.NoError(t, err)
+	actualPtr := jsonutils.UnmarshalAs[*person](content)
+	require.False(t, actualPtr.IsError())
+	require.Equal(t, expectedPtr, actualPtr.MustGet())
+}
+
+func Test_UnmarshalAs_fail(t *testing.T) {
+	actual := jsonutils.UnmarshalAs[person]([]byte(`{"invalid": "json`))
+	require.True(t, actual.IsError())
+}
+
 func readTestdata(elements ...string) ([]byte, error) {
 	filename := toTestdataFilename(elements...)
 	path := filepath.Clean(filename)
