@@ -49,26 +49,24 @@ func AnyToAnySlice(value any) maybe.Maybe[[]any] {
 	return maybe.Just(slice)
 }
 
-// AssertContains returns an error if the given slice of values does not contain
-// the give value, otherwise it returns nil. The returned error describes the
-// missing values.
+// AssertContains returns an error if the given target slice of values does not
+// contain the give value, otherwise it returns nil. The returned error
+// describes the missing values. For a non-asserting contains function,
+// use slices.Contains from the Go standard library.
 func AssertContains[T comparable](target []T, value T) error {
 	if slices.Contains(target, value) {
 		return nil
 	}
 	// We could call stringutils.ToQuoted here but that would create a cycle as
 	// stringutils uses sliceutils. I believe sliceutils to be the more
-	// foundational so it should reimplement this mapper.Mapper function rather
-	// than stringutils reimplementing MapNoError.
-	quotedValuesResult := Map(
-		func(value T) result.Result[string] {
-			return result.Ok(fmt.Sprintf("%v", value))
+	// foundational so it should reimplement this mapper.MapperNoError function
+	// rather than stringutils reimplementing MapNoError.
+	quotedValues := MapNoError(
+		func(value T) string {
+			return fmt.Sprintf("%v", value)
 		},
 		target,
 	)
-	// The mapper above does not ever return an error, so we can call MustGet
-	// without checking IsError first.
-	quotedValues := quotedValuesResult.MustGet()
 	sort.Strings(quotedValues)
 	csv := strings.Join(quotedValues, `, `)
 	return errors.New(`must be one of %s`, csv)
