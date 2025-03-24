@@ -89,6 +89,17 @@ func CollectErrors[T any](root error, elements ...result.Result[T]) error {
 	return nil
 }
 
+// ContainsAll returns true if the given target slice of values contains all the
+// given values, otherwise it returns false.
+func ContainsAll[T comparable](target []T, values []T) bool {
+	for _, value := range values {
+		if !slices.Contains(target, value) {
+			return false
+		}
+	}
+	return true
+}
+
 // Detect returns the first value found in the given slice of values that matches
 // the given filter. Returns a maybe.Nothing if no value is found. Returns a
 // result.Error if the filter fails.
@@ -178,6 +189,13 @@ func Disjoint[T comparable](left []T, right []T) result.Result[[]T] {
 		right,
 	)
 	return UniqueUnion(leftOnly.MustGet(), rightOnly.MustGet())
+}
+
+// Duplicate returns a newly allocated copy of the given slice.
+func Duplicate[T any](src []T) []T {
+	dst := make([]T, len(src))
+	_ = copy(dst, src)
+	return dst
 }
 
 // FirstError returns the first error, if any, in the given slice of
