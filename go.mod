@@ -2,11 +2,13 @@ module github.com/sassoftware/sas-ggdk
 
 go 1.23.0
 
+toolchain go1.24.1
+
 require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/text v0.23.0
-	google.golang.org/protobuf v1.36.5
+	google.golang.org/protobuf v1.36.6
 )
 
 require (
