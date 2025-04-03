@@ -9,16 +9,16 @@ import (
 
 	"github.com/sassoftware/sas-ggdk/pkg/errors"
 	"github.com/sassoftware/sas-ggdk/pkg/maputils"
+	"github.com/sassoftware/sas-ggdk/pkg/pointer"
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 )
 
 func Test_AssertValuesNotNil(t *testing.T) {
 	m := map[string]*int32{
-		`small`:  proto.Int32(10),
-		`medium`: proto.Int32(20),
-		`large`:  proto.Int32(30),
+		`small`:  pointer.Ptr[int32](10),
+		`medium`: pointer.Ptr[int32](20),
+		`large`:  pointer.Ptr[int32](30),
 	}
 	err := maputils.AssertValuesNotNil(m)
 	require.NoError(t, err)
