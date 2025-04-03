@@ -4,6 +4,7 @@
 package errors_test
 
 import (
+	stderrors "errors"
 	"fmt"
 	"os/exec"
 	"path/filepath"
@@ -41,7 +42,6 @@ func Test_Message_withParameters(t *testing.T) {
 
 func Test_New(t *testing.T) {
 	instance := errors.New(fileNotFound)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	actual := instance.Error()
 	requireHasSuffix(t, actual, fileNotFound)
@@ -51,7 +51,6 @@ func Test_New_withParameters(t *testing.T) {
 	template := fileNotFoundTemplate
 	filename := autoExecBat
 	instance := errors.New(template, filename)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	suffix := fmt.Sprintf(template, filename)
 	actual := instance.Error()
@@ -89,12 +88,12 @@ func Test_Unwrap(t *testing.T) {
 	require.Len(t, instances, 2)
 
 	actualErr := instances[0]
-	require.NotNil(t, actualErr)
+	require.Error(t, actualErr)
 	actualMessage := actualErr.Error()
 	requireHasSuffix(t, actualMessage, applicationFailure)
 
 	actualErr = instances[1]
-	require.NotNil(t, actualErr)
+	require.Error(t, actualErr)
 	actualMessage = actualErr.Error()
 	requireHasSuffix(t, actualMessage, fileNotFound)
 
@@ -111,7 +110,6 @@ func Test_Wrap(t *testing.T) {
 	cause := errors.New(wrappedMessage)
 	message := applicationFailure
 	instance := errors.Wrap(cause, message)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	actual := instance.Error()
 	exp := fmt.Sprintf(`.+\.go:\d+: %s\r?\n Caused by:\r?\n\t\*.+\.go:\d+: %s`, applicationFailure, fileNotFound)
@@ -121,7 +119,7 @@ func Test_Wrap(t *testing.T) {
 func Test_Wrap_nil(t *testing.T) {
 	instance := errors.Wrap(nil, `error`)
 	require.ErrorContains(t, instance, `error`)
-	require.Equal(t, 1, len(errors.Unwrap(instance)))
+	require.Len(t, errors.Unwrap(instance), 1)
 }
 
 func Test_Wrap_twice(t *testing.T) {
@@ -148,7 +146,6 @@ func Test_Wrap_withParameters(t *testing.T) {
 	template := applicationFailureTemplate
 	rc := -1
 	instance := errors.Wrap(wrappedErr, template, rc)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	actual := instance.Error()
 	applicationFailureMsg := fmt.Sprintf(template, rc)
@@ -163,7 +160,6 @@ func Test_WrapAll(t *testing.T) {
 	cause2 := errors.New(wrappedMessage2)
 	message := applicationFailure
 	instance := errors.WrapAll([]error{cause1, cause2}, message)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	require.ErrorContains(t, instance, fileNotFound)
 	require.ErrorContains(t, instance, serverError)
@@ -172,10 +168,9 @@ func Test_WrapAll(t *testing.T) {
 
 func Test_WrapAll_nil(t *testing.T) {
 	instance := errors.WrapAll(nil, applicationFailure)
-	require.NotNil(t, instance)
 	require.Error(t, instance)
 	require.ErrorContains(t, instance, applicationFailure)
-	require.Equal(t, 1, len(errors.Unwrap(instance)))
+	require.Len(t, errors.Unwrap(instance), 1)
 }
 
 func Test_WrapMessage(t *testing.T) {
@@ -212,9 +207,11 @@ func Test_WrapMessage_withParameter(t *testing.T) {
 
 func Test_NilErrors(t *testing.T) {
 	e := errors.New("test")
-	m := e.(*multierror.Error)
+	m := &multierror.Error{}
+	ok := stderrors.As(e, &m)
+	require.True(t, ok)
 	m.Errors = nil
-	require.Equal(t, "", m.Error())
+	require.Empty(t, m.Error())
 }
 
 func Test_ToStrings(t *testing.T) {

@@ -1,128 +1,103 @@
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
+    - asasalint
+    - asciicheck
+    - bidichk
     - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - cyclop
+    - decorder
     - dogsled
     - dupl
+    - durationcheck
     - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exptostd
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
     - funlen
+    - ginkgolinter
+    - gocheckcompilerdirectives
     - gochecknoinits
+    - gochecksumtype
+    - gocognit
     - goconst
     - gocritic
     - gocyclo
-    - gofmt
-    - goimports
+    - godot
+    - godox
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
     - gosec
-    - gosimple
+    - gosmopolitan
     - govet
+    - grouper
+    - iface
+    - importas
+    - inamedparam
     - ineffassign
+    - intrange
     - lll
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
     - misspell
+    - musttag
     - nakedret
+    - nestif
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - noctx
+    - nosprintfhostport
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
     - staticcheck
-    - stylecheck
-    # TODO: Add linter back when support for generics is available.
-    #  ref: https://github.com/golangci/golangci-lint/issues/2649
-    - typecheck
-    # TODO: Add linter back when support for generics is available.
-    #  ref: https://github.com/golangci/golangci-lint/issues/2649
+    - tagalign
+    - tagliatelle
+    - testableexamples
+    - testifylint
+    - testpackage
+    - tparallel
     - unconvert
-    # TODO: Add linter back when support for generics is available.
-    #  ref: https://github.com/golangci/golangci-lint/issues/2649
     - unparam
     - unused
-    # TODO: Add linter back when support for generics is available.
-    #  ref: https://github.com/golangci/golangci-lint/issues/2649
+    - usestdlibvars
+    - usetesting
+    - wastedassign
     - whitespace
+    - zerologlint
+  exclusions:
+    presets:
+      - common-false-positives
+    rules:
+      - linters:
+          - goconst
+          - forbidigo
+        path: (.+)_test\.go
+formatters:
+  enable:
+    - gofmt
+    - goimports
 
-#run:
-#  go: "1.22"
-#  timeout: 10m
-linters-settings:
-  goconst:
-    ignore-tests: true
-#  golint:
-#    min-confidence: 0
-#  lll:
-#    line-length: 160
-#  gocritic:
-#    # Note that the following checks are the default checks,
-#    # plus builtinShadow. They are ordered as they appear on
-#    # the explanation page, grouped by the type of check.
-#    # Ref: https://go-critic.github.io/overview.html
-#    enabled-checks:
-#      # Diagnostic checks
-#      - appendAssign
-#      - caseOrder
-#      - dupArg
-#      - dupBranchBody
-#      - dupCase
-#      - dupSubExpr
-#      - flagDeref
-#      # Style checks
-#      - assignOp
-#      - builtinShadow
-#      - captLocal
-#      - defaultCaseOrder
-#      - elseif
-#      - ifElseChain
-#      - regexpMust
-#      - singleCaseSwitch
-#      - sloppyLen
-#      - switchTrue
-#      - typeSwitchVar
-#      - underef
-#      - unlambda
-#      - unslice
-#  govet:
-#    # report about shadowed variables
-#    check-shadowing: true
-#
-#
-#issues:
-#  exclude-use-default: false
-#  exclude-rules:
-#    - path: pkg/di/doc.go
-#      linters:
-#        - gofmt
-#        - goimports
-#    - path: pkg/memoize/doc.go
-#      linters:
-#        - gofmt
-#        - goimports
-#    - path: pkg/maybe/doc.go
-#      linters:
-#        - gofmt
-#        - goimports
-#    - path: pkg/result/doc.go
-#      linters:
-#        - gofmt
-#        - goimports
-#    - text: "and that stutters"
-#      linters:
-#        - golint
-#    - text: "error strings should not be capitalized or end with punctuation or a newline"
-#      linters:
-#        - golint
-#    - text: "G101: Potential hardcoded credentials"
-#      linters:
-#        - gosec
-#    - text: "should omit comparison to bool constant"
-#      linters:
-#        - gosimple
-#    - text: "S1023: redundant `return` statement"
-#      linters:
-#        - gosimple
-#    - text: "S1000: should use for range instead of for { select {} }"
-#      linters:
-#        - gosimple
-#    - text: "ST1005: error strings should not be capitalized"
-#      linters:
-#        - stylecheck
-#    - text: "should have a package comment, unless it's in another file for this package"
-#      linters:
-#        - golint
-#    - text: "S1002: should omit comparison to bool constant"
-#      linters:
-#        - gosimple
-#

@@ -79,6 +79,8 @@ func AsInt(value string, defaultValue int) int {
 	return m(value).OrElse(defaultValue)
 }
 
+// AsInt64 returns the given string in the given base and bitSize as an int64.
+// If the conversion fails, the given defaultValue is returned.
 func AsInt64(value string, base, bitSize int, defaultValue int64) int64 {
 	m := result.MakeFlatMapper3(strconv.ParseInt)
 	return m(value, base, bitSize).OrElse(defaultValue)

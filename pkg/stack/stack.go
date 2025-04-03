@@ -47,7 +47,7 @@ func (stack *Stack[T]) Pop() (item T, err error) {
 }
 
 // Push adds the given item to the top of the stack; the stack is returned; never
-// nil
+// nil.
 func (stack *Stack[T]) Push(item T) *Stack[T] {
 	stack.content = append(stack.content, item)
 	return stack

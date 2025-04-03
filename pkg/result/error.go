@@ -40,7 +40,7 @@ func (e *err[T]) OrElseGet(f Getter[T]) T {
 	return f()
 }
 
-// String returns a representation of the error
+// String returns a representation of the error.
 func (e *err[T]) String() string {
 	return fmt.Sprintf("{Error: %#v}", e.err)
 }

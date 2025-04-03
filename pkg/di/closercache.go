@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-// Ensure closerCache implements closerCacheInterface
+// Ensure closerCache implements closerCacheInterface.
 var _ closerCacheInterface = (*closerCache)(nil)
 
 type closerCacheInterface interface {

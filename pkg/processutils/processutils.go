@@ -12,7 +12,8 @@ import (
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 )
 
-// executableFunc is a hook for testing
+// executableFunc is a hook for testing.
+// nolint: revive
 var executableFunc func() (string, error) = os.Executable
 
 // ProcessName returns a simple name for the process. The name is not guaranteed to

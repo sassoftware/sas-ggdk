@@ -96,9 +96,9 @@ func Start() (StopFn, error) {
 	if state == started {
 		return nil, errors.New(`the current state is 'started' but must be 'stopped'`)
 	}
-	replacedIds := creationStrategyCache.Replaced()
-	if len(replacedIds) > 0 {
-		replacedS := strings.Join(replacedIds, ", ")
+	replacedIDs := creationStrategyCache.Replaced()
+	if len(replacedIDs) > 0 {
+		replacedS := strings.Join(replacedIDs, ", ")
 		return nil, errors.New(`the following ids were replaced: %s`, replacedS)
 	}
 	state = started

@@ -145,7 +145,7 @@ func (bag *Bag[T]) ToSlice() []T {
 	results := make([]T, 0, size)
 	content := bag.getContent()
 	for key, count := range content {
-		for i := 0; i < count; i++ {
+		for range count {
 			results = append(results, key)
 		}
 	}

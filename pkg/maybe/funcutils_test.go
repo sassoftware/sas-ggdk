@@ -19,6 +19,6 @@ func Test_CallFuncJust(t *testing.T) {
 	require.Equal(t, 1, a)
 }
 
-func Test_CallFuncNothing(t *testing.T) {
+func Test_CallFuncNothing(_ *testing.T) {
 	maybe.CallFunc(maybe.Nothing[func()]())
 }

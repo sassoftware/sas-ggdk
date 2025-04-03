@@ -10,7 +10,7 @@ import (
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 )
 
-// Ensure singletonFactoryCreationStrategy implements creationStrategyInterface
+// Ensure singletonFactoryCreationStrategy implements creationStrategyInterface.
 var _ creationStrategyInterface = (*singletonFactoryCreationStrategy)(nil)
 
 type creationStrategyInterface interface {

@@ -10,7 +10,7 @@ import (
 	"github.com/sassoftware/sas-ggdk/pkg/maybe"
 )
 
-// Ensure strategyCache implements creationStrategyCacheInterface
+// Ensure strategyCache implements creationStrategyCacheInterface.
 var _ creationStrategyCacheInterface = (*strategyCache)(nil)
 
 type creationStrategyCacheInterface interface {

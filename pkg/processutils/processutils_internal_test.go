@@ -4,7 +4,7 @@
 package processutils
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 
 func Test_ExecutableFailed(t *testing.T) {
 	executableFunc = func() (string, error) {
-		return "", fmt.Errorf("executable failed")
+		return "", errors.New("executable failed")
 	}
 	defer func() { executableFunc = os.Executable }()
 	value := ProcessName()

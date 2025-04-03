@@ -33,7 +33,7 @@ func (n nothing[T]) OrElseGet(f Getter[T]) T {
 	return f()
 }
 
-// String returns a representation of the value held in this Nothing
+// String returns a representation of the value held in this Nothing.
 func (n nothing[T]) String() string {
 	return "{Nothing}"
 }

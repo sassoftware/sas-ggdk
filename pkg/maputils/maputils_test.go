@@ -87,7 +87,7 @@ func Test_Map_error(t *testing.T) {
 		`key`: `value`,
 	}
 	failedMap := `failed MAP`
-	mapper := func(value string) result.Result[int] {
+	mapper := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(failedMap))
 	}
 	actual := maputils.Map(mapper, m)
@@ -176,7 +176,7 @@ func Test_Fold_fail(t *testing.T) {
 		`key`: `value`,
 	}
 	expectedMessage := `failed REDUCE`
-	transformer := func(target map[string]int, source string) result.Result[map[string]int] {
+	transformer := func(_ map[string]int, _ string) result.Result[map[string]int] {
 		return result.Error[map[string]int](errors.New(expectedMessage))
 	}
 	actual := maputils.Fold(
@@ -192,10 +192,10 @@ func Test_Fold_withSelect_fail(t *testing.T) {
 		`key`: `value`,
 	}
 	expectedMessage := `failed REDUCE filter`
-	filter := func(animal string) result.Result[bool] {
+	filter := func(_ string) result.Result[bool] {
 		return result.Error[bool](errors.New(expectedMessage))
 	}
-	transformer := func(target map[string]int, animal string) result.Result[map[string]int] {
+	transformer := func(target map[string]int, _ string) result.Result[map[string]int] {
 		return result.Ok(target)
 	}
 	filtered := maputils.Select(m, filter)
@@ -272,10 +272,10 @@ func Test_Fold_withFilter_fail(t *testing.T) {
 		`key`: `value`,
 	}
 	expectedMessage := `failed REDUCE filter`
-	filter := func(animal string) result.Result[bool] {
+	filter := func(_ string) result.Result[bool] {
 		return result.Error[bool](errors.New(expectedMessage))
 	}
-	transformer := func(target map[string]int, animal string) result.Result[map[string]int] {
+	transformer := func(target map[string]int, _ string) result.Result[map[string]int] {
 		return result.Ok(target)
 	}
 	filtered := maputils.Select(m, filter)

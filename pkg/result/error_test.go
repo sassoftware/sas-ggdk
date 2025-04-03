@@ -4,10 +4,10 @@
 package result_test
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
-	"github.com/sassoftware/sas-ggdk/pkg/errors"
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 	"github.com/stretchr/testify/require"
 )
@@ -28,10 +28,10 @@ func Test_New_Error_Int(t *testing.T) {
 }
 
 func Test_Error_String(t *testing.T) {
-	instance1 := result.Error[int](fmt.Errorf("an int error"))
+	instance1 := result.Error[int](errors.New("an int error"))
 	require.Equal(t, "{Error: &errors.errorString{s:\"an int error\"}}", fmt.Sprintf("%v", instance1))
 
-	instance2 := result.Error[[]int](fmt.Errorf("a slice of int error"))
+	instance2 := result.Error[[]int](errors.New("a slice of int error"))
 	require.Equal(t, "{Error: &errors.errorString{s:\"a slice of int error\"}}", fmt.Sprintf("%v", instance2))
 
 	instance3 := result.Error[[]string](nil)

@@ -39,7 +39,7 @@ func Test_Test_Detect(t *testing.T) {
 	detectAbsent := func(v int) result.Result[bool] {
 		return result.Ok(v == 2)
 	}
-	detectError := func(v int) result.Result[bool] {
+	detectError := func(_ int) result.Result[bool] {
 		return result.Error[bool](errors.New("failed"))
 	}
 	present := result.FlatMap2(collections.Detect[int], s, result.Ok(filters.Filter[int](detectPresent)))
@@ -75,7 +75,7 @@ func Test_Select(t *testing.T) {
 	selectAbsent := func(v int) result.Result[bool] {
 		return result.Ok(v == 100)
 	}
-	selectError := func(v int) result.Result[bool] {
+	selectError := func(_ int) result.Result[bool] {
 		return result.Error[bool](errors.New("failed"))
 	}
 	present := result.FlatMap2(collections.Select[int], s, result.Ok(filters.Filter[int](selectPresent)))

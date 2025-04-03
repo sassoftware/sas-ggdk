@@ -69,7 +69,7 @@ func Test_NewMapFolder(t *testing.T) {
 func Test_NewMapFolder_toKey_error(t *testing.T) {
 	// Test error handling when the toKey function returns an error.
 	expectedMessage := `failed key creation`
-	toKey := func(value string) result.Result[string] {
+	toKey := func(_ string) result.Result[string] {
 		return result.Error[string](errors.New(expectedMessage))
 	}
 	toValue := func(value string) result.Result[int] {
@@ -88,7 +88,7 @@ func Test_NewMapFolder_toValue_error(t *testing.T) {
 	// Test error handling when the toValue function returns an error.
 	expectedMessage := `failed value creation`
 	toKey := result.Ok[string]
-	toValue := func(value string) result.Result[int] {
+	toValue := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(expectedMessage))
 	}
 	folder := folders.NewMapFolder[string, string, int](toKey, toValue)

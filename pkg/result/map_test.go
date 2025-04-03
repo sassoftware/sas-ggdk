@@ -47,7 +47,7 @@ func Test_Map2_Error1(t *testing.T) {
 	instance2 := result.Ok("value2")
 	actual := result.Map2(append2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_Map2_Error2(t *testing.T) {
@@ -55,7 +55,7 @@ func Test_Map2_Error2(t *testing.T) {
 	instance2 := result.Error[string](errors.New("error"))
 	actual := result.Map2(append2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func append3(a, b, c string) (string, error) {
@@ -75,7 +75,7 @@ func Test_Map3_Error1(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.Map3(append3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_Map3_Error2(t *testing.T) {
@@ -84,7 +84,7 @@ func Test_Map3_Error2(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.Map3(append3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_Map3_Error3(t *testing.T) {
@@ -93,7 +93,7 @@ func Test_Map3_Error3(t *testing.T) {
 	instance3 := result.Error[string](errors.New("error"))
 	actual := result.Map3(append3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func append4(a, b, c, d string) (string, error) {
@@ -116,7 +116,7 @@ func Test_Map4_Error1(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.Map4(append4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error1")
+	require.Equal(t, "error1", actual.Error().Error())
 }
 
 func Test_Map4_Error2(t *testing.T) {
@@ -126,7 +126,7 @@ func Test_Map4_Error2(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.Map4(append4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error2")
+	require.Equal(t, "error2", actual.Error().Error())
 }
 
 func Test_Map4_Error3(t *testing.T) {
@@ -136,7 +136,7 @@ func Test_Map4_Error3(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.Map4(append4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error3")
+	require.Equal(t, "error3", actual.Error().Error())
 }
 
 func Test_Map4_Error4(t *testing.T) {
@@ -146,7 +146,7 @@ func Test_Map4_Error4(t *testing.T) {
 	instance4 := result.Error[string](errors.New("error4"))
 	actual := result.Map4(append4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error4")
+	require.Equal(t, "error4", actual.Error().Error())
 }
 
 func append5(a, b, c, d, e string) (string, error) {
@@ -171,7 +171,7 @@ func Test_Map5_Error1(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.Map5(append5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error1")
+	require.Equal(t, "error1", actual.Error().Error())
 }
 
 func Test_Map5_Error2(t *testing.T) {
@@ -182,7 +182,7 @@ func Test_Map5_Error2(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.Map5(append5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error2")
+	require.Equal(t, "error2", actual.Error().Error())
 }
 
 func Test_Map5_Error3(t *testing.T) {
@@ -193,7 +193,7 @@ func Test_Map5_Error3(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.Map5(append5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error3")
+	require.Equal(t, "error3", actual.Error().Error())
 }
 
 func Test_Map5_Error4(t *testing.T) {
@@ -204,7 +204,7 @@ func Test_Map5_Error4(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.Map5(append5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error4")
+	require.Equal(t, "error4", actual.Error().Error())
 }
 
 func Test_Map5_Error5(t *testing.T) {
@@ -215,7 +215,7 @@ func Test_Map5_Error5(t *testing.T) {
 	instance5 := result.Error[string](errors.New("error4"))
 	actual := result.Map5(append5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error4")
+	require.Equal(t, "error4", actual.Error().Error())
 }
 
 func Test_MapNoError_Ok(t *testing.T) {
@@ -252,7 +252,7 @@ func Test_MapNoError2_Error1(t *testing.T) {
 	instance2 := result.Ok("value2")
 	actual := result.MapNoError2(appendNoError2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_MapNoError2_Error2(t *testing.T) {
@@ -260,7 +260,7 @@ func Test_MapNoError2_Error2(t *testing.T) {
 	instance2 := result.Error[string](errors.New("error"))
 	actual := result.MapNoError2(appendNoError2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func appendNoError3(a, b, c string) string {
@@ -280,7 +280,7 @@ func Test_MapNoError3_Error1(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.MapNoError3(appendNoError3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_MapNoError3_Error2(t *testing.T) {
@@ -289,7 +289,7 @@ func Test_MapNoError3_Error2(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.MapNoError3(appendNoError3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_MapNoError3_Error3(t *testing.T) {
@@ -298,7 +298,7 @@ func Test_MapNoError3_Error3(t *testing.T) {
 	instance3 := result.Error[string](errors.New("error"))
 	actual := result.MapNoError3(appendNoError3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func appendNoError4(a, b, c, d string) string {
@@ -321,7 +321,7 @@ func Test_MapNoError4_Error1(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.MapNoError4(appendNoError4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error1")
+	require.Equal(t, "error1", actual.Error().Error())
 }
 
 func Test_MapNoError4_Error2(t *testing.T) {
@@ -331,7 +331,7 @@ func Test_MapNoError4_Error2(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.MapNoError4(appendNoError4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error2")
+	require.Equal(t, "error2", actual.Error().Error())
 }
 
 func Test_MapNoError4_Error3(t *testing.T) {
@@ -341,7 +341,7 @@ func Test_MapNoError4_Error3(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.MapNoError4(appendNoError4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error3")
+	require.Equal(t, "error3", actual.Error().Error())
 }
 
 func Test_MapNoError4_Error4(t *testing.T) {
@@ -351,7 +351,7 @@ func Test_MapNoError4_Error4(t *testing.T) {
 	instance4 := result.Error[string](errors.New("error4"))
 	actual := result.MapNoError4(appendNoError4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error4")
+	require.Equal(t, "error4", actual.Error().Error())
 }
 
 func appendNoError5(a, b, c, d, e string) string {
@@ -376,7 +376,7 @@ func Test_MapNoError5_Error1(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.MapNoError5(appendNoError5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error1")
+	require.Equal(t, "error1", actual.Error().Error())
 }
 
 func Test_MapNoError5_Error2(t *testing.T) {
@@ -387,7 +387,7 @@ func Test_MapNoError5_Error2(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.MapNoError5(appendNoError5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error2")
+	require.Equal(t, "error2", actual.Error().Error())
 }
 
 func Test_MapNoError5_Error3(t *testing.T) {
@@ -398,7 +398,7 @@ func Test_MapNoError5_Error3(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.MapNoError5(appendNoError5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error3")
+	require.Equal(t, "error3", actual.Error().Error())
 }
 
 func Test_MapNoError5_Error4(t *testing.T) {
@@ -409,7 +409,7 @@ func Test_MapNoError5_Error4(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.MapNoError5(appendNoError5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error4")
+	require.Equal(t, "error4", actual.Error().Error())
 }
 
 func Test_MapNoError5_Error5(t *testing.T) {
@@ -420,12 +420,12 @@ func Test_MapNoError5_Error5(t *testing.T) {
 	instance5 := result.Error[string](errors.New("error5"))
 	actual := result.MapNoError5(appendNoError5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error5")
+	require.Equal(t, "error5", actual.Error().Error())
 }
 
 func Test_MapError_Ok(t *testing.T) {
 	instance := result.Ok(value)
-	err := result.MapErrorOnly(func(a string) error {
+	err := result.MapErrorOnly(func(_ string) error {
 		return nil
 	}, instance)
 	require.NoError(t, err)
@@ -433,7 +433,7 @@ func Test_MapError_Ok(t *testing.T) {
 
 func Test_MapError_on_Ok_error(t *testing.T) {
 	instance := result.Ok(value)
-	err := result.MapErrorOnly(func(a string) error {
+	err := result.MapErrorOnly(func(_ string) error {
 		return errors.New("failed")
 	}, instance)
 	require.ErrorContains(t, err, "failed")
@@ -442,7 +442,7 @@ func Test_MapError_on_Ok_error(t *testing.T) {
 func Test_MapError_Err(t *testing.T) {
 	instance := result.Error[string](errors.New("failed"))
 	called := false
-	err := result.MapErrorOnly(func(a string) error {
+	err := result.MapErrorOnly(func(_ string) error {
 		called = true
 		return errors.New("inner error")
 	}, instance)
@@ -450,7 +450,7 @@ func Test_MapError_Err(t *testing.T) {
 	require.ErrorContains(t, err, "failed")
 }
 
-func appendError2(a, b string) error {
+func appendError2(_, _ string) error {
 	return errors.New("inner error")
 }
 func Test_MapError2_Ok(t *testing.T) {
@@ -474,7 +474,7 @@ func Test_MapError2_Error2(t *testing.T) {
 	require.ErrorContains(t, err, "error2")
 }
 
-func appendError3(a, b, c string) error {
+func appendError3(_, _, _ string) error {
 	return errors.New("inner error")
 }
 func Test_MapError3_Ok(t *testing.T) {
@@ -509,7 +509,7 @@ func Test_MapError3_Error3(t *testing.T) {
 	require.ErrorContains(t, err, "error3")
 }
 
-func appendError4(a, b, c, d string) error {
+func appendError4(_, _, _, _ string) error {
 	return errors.New("inner error")
 }
 
@@ -558,7 +558,7 @@ func Test_MapError4_Error4(t *testing.T) {
 	require.ErrorContains(t, err, "error4")
 }
 
-func appendError5(a, b, c, d, e string) error {
+func appendError5(_, _, _, _, _ string) error {
 	return errors.New("inner error")
 }
 

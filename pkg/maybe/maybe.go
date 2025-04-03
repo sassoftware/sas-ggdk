@@ -17,11 +17,11 @@ type Maybe[T any] interface {
 	MustGet() T
 	// OrElse returns the encapsulated value if the Maybe encapsulates a value
 	// and returns the given default if the Maybe encapsulates nothing.
-	OrElse(d T) T
+	OrElse(elseValue T) T
 	// OrElseGet returns the encapsulated value if the Maybe encapsulates a value
 	// and returns the result of calling the given Getter function if the Maybe
 	// encapsulates nothing.
-	OrElseGet(Getter[T]) T
+	OrElseGet(getter Getter[T]) T
 }
 
 // MapperNoError defines a function with one argument of any type that returns a

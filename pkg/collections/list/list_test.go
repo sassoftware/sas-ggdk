@@ -89,7 +89,7 @@ func Test_NewWithAccessor(t *testing.T) {
 
 func Test_Map_fail(t *testing.T) {
 	colors := list.NewFrom[string](`red`, `green`, `blue`)
-	mapper := func(value string) result.Result[int] {
+	mapper := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(`fail`))
 	}
 	actual := list.Map[string, int](mapper, colors)
@@ -203,7 +203,7 @@ func Test_List_Select_error(t *testing.T) {
 	numbers := list.NewFrom[int](1, 2)
 	expectedMessage := `failing SELECT filter `
 	itemCount := 1
-	isEvenFilter := func(item int) result.Result[bool] {
+	isEvenFilter := func(_ int) result.Result[bool] {
 		if itemCount == 1 {
 			itemCount++
 			return result.Ok(true) // Ensure we have some data in the target.

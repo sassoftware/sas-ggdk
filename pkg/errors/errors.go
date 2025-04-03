@@ -4,6 +4,7 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"runtime"
@@ -86,7 +87,8 @@ func Panic(template string, params ...any) {
 func Unwrap(err error) []error {
 	var result = make([]error, 0, 3)
 	if err != nil {
-		all, ok := err.(*multierror.Error)
+		all := &multierror.Error{}
+		ok := errors.As(err, &all)
 		if ok {
 			// Collect each error in the multierror...
 			result = append(result, all.Errors...)

@@ -23,7 +23,7 @@ func Test_CaptureStdStreams(t *testing.T) {
 	require.NoError(t, res.Error())
 	require.NoError(t, stdout.Error())
 	require.NoError(t, stderr.Error())
-	require.Equal(t, true, res.MustGet())
+	require.True(t, res.MustGet())
 	require.Equal(t, "stdout content\n", string(stdout.MustGet()))
 	require.Equal(t, "stderr content\n", string(stderr.MustGet()))
 }
