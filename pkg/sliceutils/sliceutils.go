@@ -497,6 +497,7 @@ func Tail[T any](source []T) maybe.Maybe[[]T] {
 	return maybe.Just(source[1:])
 }
 
+// ToSlice returns the given variadic argument list as a slice.
 func ToSlice[T any](values ...T) []T {
 	return values
 }

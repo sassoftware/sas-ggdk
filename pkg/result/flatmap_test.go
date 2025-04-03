@@ -4,7 +4,6 @@
 package result_test
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
 
@@ -16,14 +15,14 @@ import (
 func Test_FlatMap_Ok(t *testing.T) {
 	instance := result.Ok(10)
 	mapped := result.FlatMap(func(i int) result.Result[string] {
-		return result.Ok(fmt.Sprintf("%v", i))
+		return result.Ok(strconv.Itoa(i))
 	}, instance)
 	validateOkResult(t, mapped, "10", "failed")
 }
 
 func Test_FlatMap_Ok_To_Failed(t *testing.T) {
 	instance := result.Ok(10)
-	mapped := result.FlatMap(func(i int) result.Result[string] {
+	mapped := result.FlatMap(func(_ int) result.Result[string] {
 		return result.Error[string](errors.New("failed"))
 	}, instance)
 	validateErrResult(t, mapped, "else")
@@ -32,7 +31,7 @@ func Test_FlatMap_Ok_To_Failed(t *testing.T) {
 func Test_FlatMap_Failed(t *testing.T) {
 	instance := result.Error[int](errors.New("failed"))
 	called := false
-	mapped := result.FlatMap(func(i int) result.Result[string] {
+	mapped := result.FlatMap(func(_ int) result.Result[string] {
 		called = true
 		return result.Ok("ok")
 	}, instance)
@@ -69,7 +68,7 @@ func Test_FlatMap2_Error1(t *testing.T) {
 	instance2 := result.Ok("value2")
 	actual := result.FlatMap2(flatAppend2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap2_Error2(t *testing.T) {
@@ -77,7 +76,7 @@ func Test_FlatMap2_Error2(t *testing.T) {
 	instance2 := result.Error[string](errors.New("error"))
 	actual := result.FlatMap2(flatAppend2, instance1, instance2)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func append3WithError(a, b, c string) (string, error) {
@@ -100,7 +99,7 @@ func Test_FlatMap3_Error1(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.FlatMap3(flatAppend3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap3_Error2(t *testing.T) {
@@ -109,7 +108,7 @@ func Test_FlatMap3_Error2(t *testing.T) {
 	instance3 := result.Ok("value3")
 	actual := result.FlatMap3(flatAppend3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap3_Error3(t *testing.T) {
@@ -118,7 +117,7 @@ func Test_FlatMap3_Error3(t *testing.T) {
 	instance3 := result.Error[string](errors.New("error"))
 	actual := result.FlatMap3(flatAppend3, instance1, instance2, instance3)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func append4WithError(a, b, c, d string) (string, error) {
@@ -143,7 +142,7 @@ func Test_FlatMap4_Error1(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.FlatMap4(flatAppend4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap4_Error2(t *testing.T) {
@@ -153,7 +152,7 @@ func Test_FlatMap4_Error2(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.FlatMap4(flatAppend4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap4_Error3(t *testing.T) {
@@ -163,7 +162,7 @@ func Test_FlatMap4_Error3(t *testing.T) {
 	instance4 := result.Ok("value4")
 	actual := result.FlatMap4(flatAppend4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap4_Error4(t *testing.T) {
@@ -173,7 +172,7 @@ func Test_FlatMap4_Error4(t *testing.T) {
 	instance4 := result.Error[string](errors.New("error"))
 	actual := result.FlatMap4(flatAppend4, instance1, instance2, instance3, instance4)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func append5WithError(a, b, c, d, e string) (string, error) {
@@ -200,7 +199,7 @@ func Test_FlatMap5_Error1(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.FlatMap5(flatAppend5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap5_Error2(t *testing.T) {
@@ -211,7 +210,7 @@ func Test_FlatMap5_Error2(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.FlatMap5(flatAppend5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap5_Error3(t *testing.T) {
@@ -222,7 +221,7 @@ func Test_FlatMap5_Error3(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.FlatMap5(flatAppend5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap5_Error4(t *testing.T) {
@@ -233,7 +232,7 @@ func Test_FlatMap5_Error4(t *testing.T) {
 	instance5 := result.Ok("value5")
 	actual := result.FlatMap5(flatAppend5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }
 
 func Test_FlatMap5_Error5(t *testing.T) {
@@ -244,5 +243,5 @@ func Test_FlatMap5_Error5(t *testing.T) {
 	instance5 := result.Error[string](errors.New("error"))
 	actual := result.FlatMap5(flatAppend5, instance1, instance2, instance3, instance4, instance5)
 	validateErrResult(t, actual, "failed")
-	require.Equal(t, actual.Error().Error(), "error")
+	require.Equal(t, "error", actual.Error().Error())
 }

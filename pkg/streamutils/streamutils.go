@@ -11,7 +11,8 @@ import (
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 )
 
-// createPipeFunc is a hook for testing
+// createPipeFunc is a hook for testing.
+// nolint:revive
 var createPipeFunc func() (fileI, fileI, error) = createPipe
 
 // CaptureStdStreams captures the stdout and stderr of a function that returns a

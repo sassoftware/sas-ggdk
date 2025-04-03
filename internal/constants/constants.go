@@ -7,6 +7,6 @@ Package constants defines the constants used by the library.
 package constants
 
 const (
-	// AppName is the app name
+	// AppName is the app name.
 	AppName = "go-lib"
 )

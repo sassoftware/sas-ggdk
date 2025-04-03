@@ -23,11 +23,11 @@ $(GIT_CHGLOG): $(BINGO_DIR)/git-chglog.mod
 	@echo "(re)installing $(GOBIN)/git-chglog-v0.15.4"
 	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=git-chglog.mod -o=$(GOBIN)/git-chglog-v0.15.4 "github.com/git-chglog/git-chglog/cmd/git-chglog"
 
-GOLANGCI_LINT := $(GOBIN)/golangci-lint-v1.63.4
+GOLANGCI_LINT := $(GOBIN)/golangci-lint-v2.0.2
 $(GOLANGCI_LINT): $(BINGO_DIR)/golangci-lint.mod
 	@# Install binary/ries using Go 1.14+ build command. This is using bwplotka/bingo-controlled, separate go module with pinned dependencies.
-	@echo "(re)installing $(GOBIN)/golangci-lint-v1.63.4"
-	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=golangci-lint.mod -o=$(GOBIN)/golangci-lint-v1.63.4 "github.com/golangci/golangci-lint/cmd/golangci-lint"
+	@echo "(re)installing $(GOBIN)/golangci-lint-v2.0.2"
+	@cd $(BINGO_DIR) && GOWORK=off $(GO) build -mod=mod -modfile=golangci-lint.mod -o=$(GOBIN)/golangci-lint-v2.0.2 "github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 
 GOTAGGER := $(GOBIN)/gotagger-v0.9.1
 $(GOTAGGER): $(BINGO_DIR)/gotagger.mod

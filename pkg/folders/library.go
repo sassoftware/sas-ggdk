@@ -15,7 +15,7 @@ import (
 // accumulator value by the given step amount for each element folded over. The
 // elements are ignored.
 func NewCountingFolder[S any](step int) Folder[int, S] {
-	return func(accumulator int, source S) result.Result[int] {
+	return func(accumulator int, _ S) result.Result[int] {
 		return result.Ok(accumulator + step)
 	}
 }

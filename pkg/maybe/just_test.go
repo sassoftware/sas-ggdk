@@ -5,6 +5,7 @@ package maybe_test
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/sassoftware/sas-ggdk/pkg/maybe"
@@ -47,14 +48,14 @@ func Test_Map_Just(t *testing.T) {
 func Test_FlatMap_Just(t *testing.T) {
 	instance := maybe.Just(10)
 	mapped := maybe.FlatMap(func(i int) maybe.Maybe[string] {
-		return maybe.Just(fmt.Sprintf("%v", i))
+		return maybe.Just(strconv.Itoa(i))
 	}, instance)
 	validateJust(t, mapped, "10", "failed")
 }
 
 func Test_FlatMap_Just_To_Nothing(t *testing.T) {
 	instance := maybe.Just(10)
-	mapped := maybe.FlatMap(func(i int) maybe.Maybe[string] {
+	mapped := maybe.FlatMap(func(_ int) maybe.Maybe[string] {
 		return maybe.Nothing[string]()
 	}, instance)
 	validateNothingMaybe(t, mapped, "else")

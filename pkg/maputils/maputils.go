@@ -4,7 +4,6 @@
 package maputils
 
 import (
-	"fmt"
 	"maps"
 	"slices"
 	"sort"
@@ -30,7 +29,7 @@ func AssertValuesNotNil[M ~map[K]V, K comparable, V any](source M) error {
 	quotedMissing := stringutils.ToQuoted(missing...)
 	sort.Strings(quotedMissing)
 	csv := strings.Join(quotedMissing, `, `)
-	message := fmt.Sprintf(`missing required fields: %s`, csv)
+	message := `missing required fields: ` + csv
 	return errors.New(message)
 }
 

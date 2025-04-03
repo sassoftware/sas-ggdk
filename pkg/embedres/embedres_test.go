@@ -120,7 +120,7 @@ type readDirFail struct {
 	embed.FS
 }
 
-func (r *readDirFail) ReadDir(name string) ([]fs.DirEntry, error) {
+func (r *readDirFail) ReadDir(_ string) ([]fs.DirEntry, error) {
 	return nil, errors.New("readdir failed")
 }
 

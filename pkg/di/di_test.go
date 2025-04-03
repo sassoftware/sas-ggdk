@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText:  2021-2022, SAS Institute Inc., Cary, NC, USA.  All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package di
+package di_test
 
 import (
 	"fmt"
 	"io"
 	"testing"
 
+	"github.com/sassoftware/sas-ggdk/pkg/di"
 	"github.com/sassoftware/sas-ggdk/pkg/errors"
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 	"github.com/stretchr/testify/require"
@@ -53,15 +54,15 @@ func (f *failingCloser) Close() error {
 }
 
 func TestSimple(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
-	a := Get[*aCloser]("aCloser")
+	a := di.Get[*aCloser]("aCloser")
 	require.NoError(t, a.Error())
 	require.NotNil(t, a)
 	err = stopfn()
@@ -70,12 +71,12 @@ func TestSimple(t *testing.T) {
 }
 
 func TestComposite(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	aFactory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
 	bFactory := func() result.Result[any] {
-		a := Get[*aCloser]("aCloser")
+		a := di.Get[*aCloser]("aCloser")
 		if a.Error() != nil {
 			return result.Error[any](a.Error())
 		}
@@ -83,15 +84,15 @@ func TestComposite(t *testing.T) {
 			a: a.MustGet(),
 		})
 	}
-	RegisterLazySingletonFactory("aCloser", aFactory)
-	RegisterLazySingletonFactory("bCloser", bFactory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", aFactory)
+	di.RegisterLazySingletonFactory("bCloser", bFactory)
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
-	b := Get[*bCloser]("bCloser")
+	b := di.Get[*bCloser]("bCloser")
 	require.NoError(t, b.Error())
 	require.NotNil(t, b.MustGet())
-	a := Get[*aCloser]("aCloser")
+	a := di.Get[*aCloser]("aCloser")
 	require.NoError(t, a.Error())
 	require.NotNil(t, a.MustGet())
 	err = stopfn()
@@ -102,56 +103,56 @@ func TestComposite(t *testing.T) {
 }
 
 func TestGetWithoutStart(t *testing.T) {
-	a := Get[*aCloser]("aCloser")
+	a := di.Get[*aCloser]("aCloser")
 	require.Error(t, a.Error())
 }
 
 func TestNotFound(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
-	_, err := Start()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
+	_, err := di.Start()
 	require.NoError(t, err)
-	a := Get[*aCloser]("aCloser")
+	a := di.Get[*aCloser]("aCloser")
 	require.Error(t, a.Error())
 }
 
 func TestReplaceNotAllowed(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	RegisterLazySingletonFactory("aCloser", factory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	stopfn, err := di.Start()
 	require.Error(t, err)
 	require.Nil(t, stopfn)
 }
 
 func TestReplaceAllowed(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	RegisterLazySingletonFactory("aCloser", factory)
-	_, err := StartAllowReplaced()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	_, err := di.StartAllowReplaced()
 	require.NoError(t, err)
 }
 
 func TestMultipleStart(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
-	_, err := Start()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
+	_, err := di.Start()
 	require.NoError(t, err)
-	_, err = StartAllowReplaced()
+	_, err = di.StartAllowReplaced()
 	require.Error(t, err)
-	_, err = Start()
+	_, err = di.Start()
 	require.Error(t, err)
-	_, err = StartAllowReplaced()
+	_, err = di.StartAllowReplaced()
 	require.Error(t, err)
 }
 
 func TestMultipleStop(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
-	stopfn, err := Start()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
 	err = stopfn()
@@ -161,15 +162,15 @@ func TestMultipleStop(t *testing.T) {
 }
 
 func TestMultipleClose(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
-	aAsCloser := Get[io.Closer]("aCloser")
+	aAsCloser := di.Get[io.Closer]("aCloser")
 	require.NoError(t, aAsCloser.Error())
 	require.NotNil(t, aAsCloser.MustGet())
 	err = aAsCloser.MustGet().Close()
@@ -179,17 +180,17 @@ func TestMultipleClose(t *testing.T) {
 }
 
 func TestGetByInterface(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	_, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	_, err := di.Start()
 	require.NoError(t, err)
-	a := Get[*aCloser]("aCloser")
+	a := di.Get[*aCloser]("aCloser")
 	require.NoError(t, a.Error())
 	require.NotNil(t, a)
-	aAsStringer := Get[fmt.Stringer]("aCloser")
+	aAsStringer := di.Get[fmt.Stringer]("aCloser")
 	require.NoError(t, aAsStringer.Error())
 	require.NotNil(t, aAsStringer.MustGet())
 	s := aAsStringer.MustGet().String()
@@ -197,27 +198,27 @@ func TestGetByInterface(t *testing.T) {
 }
 
 func TestGetByInterfaceNotFound(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&aCloser{})
 	}
-	RegisterLazySingletonFactory("aCloser", factory)
-	_, err := Start()
+	di.RegisterLazySingletonFactory("aCloser", factory)
+	_, err := di.Start()
 	require.NoError(t, err)
-	a := Get[io.Reader]("aCloser")
+	a := di.Get[io.Reader]("aCloser")
 	require.Error(t, a.Error())
 }
 
 func TestFailingCloser(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&failingCloser{})
 	}
-	RegisterLazySingletonFactory("failingCloser", factory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("failingCloser", factory)
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
-	f := Get[io.Closer]("failingCloser")
+	f := di.Get[io.Closer]("failingCloser")
 	require.NoError(t, f.Error())
 	require.NotNil(t, f.MustGet())
 	err = stopfn()
@@ -225,15 +226,15 @@ func TestFailingCloser(t *testing.T) {
 }
 
 func TestNonCloser(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Ok[any](&cStruct{})
 	}
-	RegisterLazySingletonFactory("cStruct", factory)
-	stopfn, err := Start()
+	di.RegisterLazySingletonFactory("cStruct", factory)
+	stopfn, err := di.Start()
 	require.NoError(t, err)
 	require.NotNil(t, stopfn)
-	c := Get[*cStruct]("cStruct")
+	c := di.Get[*cStruct]("cStruct")
 	require.NoError(t, c.Error())
 	require.NotNil(t, c.MustGet())
 	err = stopfn()
@@ -241,13 +242,13 @@ func TestNonCloser(t *testing.T) {
 }
 
 func TestFailingFactory(t *testing.T) {
-	defer func() { err := Reset(); require.NoError(t, err) }()
+	defer func() { err := di.Reset(); require.NoError(t, err) }()
 	factory := func() result.Result[any] {
 		return result.Error[any](errors.New("failed"))
 	}
-	RegisterLazySingletonFactory("fail", factory)
-	_, err := Start()
+	di.RegisterLazySingletonFactory("fail", factory)
+	_, err := di.Start()
 	require.NoError(t, err)
-	a := Get[any]("fail")
+	a := di.Get[any]("fail")
 	require.Error(t, a.Error())
 }

@@ -35,7 +35,7 @@ func Test_Map(t *testing.T) {
 func Test_Map_error(t *testing.T) {
 	colors := bag.NewFrom[string](`red`, `green`, `blue`)
 	failedMap := `failed MAP`
-	mapper := func(value string) result.Result[int] {
+	mapper := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(failedMap))
 	}
 	actual := bag.Map[string, int](mapper, colors)
@@ -216,7 +216,7 @@ func Test_Bag_Select_error(t *testing.T) {
 		Add(1, 2)
 	expectedMessage := `failing SELECT filter `
 	itemCount := 1
-	isEvenFilter := func(item int) result.Result[bool] {
+	isEvenFilter := func(_ int) result.Result[bool] {
 		if itemCount == 1 {
 			itemCount++
 			return result.Ok(true) // Ensure we have some data in the target.

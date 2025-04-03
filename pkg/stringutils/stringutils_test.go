@@ -79,7 +79,7 @@ func Test_ToStringsWith_failure(t *testing.T) {
 		10, 20, 30,
 	}
 	expectedMessage := `failed to create string`
-	toHexString := func(value int) result.Result[string] {
+	toHexString := func(_ int) result.Result[string] {
 		return result.Error[string](errors.New(expectedMessage))
 	}
 	actual := stringutils.ToStringsWith(numbers, toHexString)
@@ -157,13 +157,13 @@ func Test_AsInt64(t *testing.T) {
 func Test_AsFloat(t *testing.T) {
 	var input string
 	actual := stringutils.AsFloat(input, 32, 0)
-	require.Equal(t, 0., actual)
+	require.InDelta(t, 0., actual, 0)
 	input = `1.5`
 	actual = stringutils.AsFloat(input, 32, 0)
-	require.Equal(t, 1.5, actual)
+	require.InDelta(t, 1.5, actual, 0)
 	input = `invalid`
 	actual = stringutils.AsFloat(input, 32, 0)
-	require.Equal(t, 0., actual)
+	require.InDelta(t, 0., actual, 0)
 }
 
 func Test_AsComplex(t *testing.T) {

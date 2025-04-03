@@ -26,11 +26,11 @@ type Result[T any] interface {
 	MustGet() T
 	// OrElse returns the encapsulated value if the Result encapsulates a value
 	// and returns the given default if the Result encapsulates an error.
-	OrElse(d T) T
+	OrElse(elseValue T) T
 	// OrElseGet returns the encapsulated value if the Result encapsulates a
 	// value and returns the result of calling the given Getter function if the
 	// Result encapsulates an error.
-	OrElseGet(Getter[T]) T
+	OrElseGet(getter Getter[T]) T
 }
 
 // New returns a Result encapsulating the given value and error. If the error is

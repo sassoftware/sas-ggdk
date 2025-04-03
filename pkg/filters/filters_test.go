@@ -241,7 +241,7 @@ func testIntValues(t *testing.T, fn filters.Filter[int], expected result.Result[
 	actual := fn(checkVal)
 	require.Equal(t, expected, actual, "Tested value: %d", checkVal)
 	// Test 1000 random integers
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		checkVal = rand.Int() //nolint:gosec // Weak random generation is ok when creating test data.
 		actual = fn(checkVal)
 		require.Equal(t, expected, actual, "Tested value: %d", checkVal)
@@ -254,7 +254,7 @@ func testStringValues(t *testing.T, fn filters.Filter[string], expected result.R
 	actual := fn(checkVal)
 	require.Equal(t, expected, actual, "Tested value: %s", checkVal)
 	// Test 1000 random strings
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		checkVal = strconv.Itoa(rand.Int()) //nolint:gosec // Weak random generation is ok when creating test data.
 		actual = fn(checkVal)
 		require.Equal(t, expected, actual, "Tested value: %s", checkVal)
@@ -262,7 +262,7 @@ func testStringValues(t *testing.T, fn filters.Filter[string], expected result.R
 }
 
 func newFailingFilter[T any](message string) filters.Filter[T] {
-	return func(value T) result.Result[bool] {
+	return func(_ T) result.Result[bool] {
 		return result.Error[bool](errors.New(message))
 	}
 }

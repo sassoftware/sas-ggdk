@@ -35,7 +35,7 @@ func Test_Map(t *testing.T) {
 
 func Test_Map_fail(t *testing.T) {
 	colors := orderedlist.NewFrom[string](`red`, `green`, `blue`)
-	mapper := func(value string) result.Result[int] {
+	mapper := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(`fail`))
 	}
 	actual := orderedlist.Map[string, int](mapper, colors)
@@ -83,7 +83,7 @@ func Test_NewWithAccessor(t *testing.T) {
 	require.False(t, instance.Contains(80))
 }
 
-func Test_OrderedList_Add(t *testing.T) {
+func Test_OrderedList_Add(_ *testing.T) {
 	instance := orderedlist.New[int](10)
 	instance.Add(10).Add(20).Add(20)
 }

@@ -40,7 +40,7 @@ func (j *just[T]) get() T {
 	return j.value
 }
 
-// String returns a representation of the value held in this Just
+// String returns a representation of the value held in this Just.
 func (j *just[T]) String() string {
 	return fmt.Sprintf("{Just: %#v}", j.value)
 }

@@ -71,9 +71,9 @@ func Test_CollectErrors(t *testing.T) {
 		result.Ok("ok"),
 		result.Error[string](errors.New("failure3")),
 	}
-	err := sliceutils.CollectErrors(errors.New("Failure:"), errs...)
+	err := sliceutils.CollectErrors(errors.New("failure: "), errs...)
 	require.Error(t, err)
-	reg := `(?ms)Failure:$.*Caused by:$.*failure1$.*failure2$.*failure3$`
+	reg := `(?ms)failure: $.*Caused by:$.*failure1$.*failure2$.*failure3$`
 	msg := err.Error()
 	require.Regexp(t, reg, msg)
 }
@@ -83,13 +83,13 @@ func Test_CollectErrors_no_errors(t *testing.T) {
 		result.Ok("ok"),
 		result.Ok("ok"),
 	}
-	err := sliceutils.CollectErrors(errors.New("Failure:"), errs...)
+	err := sliceutils.CollectErrors(errors.New("failure: "), errs...)
 	require.NoError(t, err)
 }
 
 func Test_CollectErrors_no_elements(t *testing.T) {
 	errs := []result.Result[string]{}
-	err := sliceutils.CollectErrors(errors.New("Failure:"), errs...)
+	err := sliceutils.CollectErrors(errors.New("failure: "), errs...)
 	require.NoError(t, err)
 }
 
@@ -367,7 +367,7 @@ func Test_Fold_int(t *testing.T) {
 func Test_Fold_int_error(t *testing.T) {
 	expected := 0
 	expectedMessage := `failed REDUCE`
-	transformer := func(total int, number int) result.Result[int] {
+	transformer := func(_ int, _ int) result.Result[int] {
 		return result.Error[int](errors.New(expectedMessage))
 	}
 	actual := sliceutils.Fold(
@@ -587,7 +587,7 @@ func Test_Map_error(t *testing.T) {
 		`blue`,
 	}
 	failedMap := `failed MAP`
-	mapper := func(value string) result.Result[int] {
+	mapper := func(_ string) result.Result[int] {
 		return result.Error[int](errors.New(failedMap))
 	}
 	actual := sliceutils.Map(mapper, colors)
@@ -804,7 +804,7 @@ func Test_SelectResult(t *testing.T) {
 	require.NotNil(t, actual.MustGet())
 }
 
-// Set up definitions for Test_SelectWithSubtypeFilter
+// Set up definitions for Test_SelectWithSubtypeFilter.
 type itemForFiltering struct {
 	value int
 }
@@ -843,7 +843,7 @@ func Test_SelectWithSubtypeFilter(t *testing.T) {
 	}
 	actual := sliceutils.SelectUsingSubsetInterfaceFilter[itemForFiltering, subsetInterface](filterFn, values)
 	require.True(t, actual.IsError(), "An error should be thrown")
-	assert.ErrorContains(t, actual.Error(), zeroErrorMsg)
+	require.ErrorContains(t, actual.Error(), zeroErrorMsg)
 	valuesSubset := values[0:4]
 	actual = sliceutils.SelectUsingSubsetInterfaceFilter[itemForFiltering, subsetInterface](filterFn, valuesSubset)
 	expected := []itemForFiltering{{6}, {3}}
@@ -995,7 +995,7 @@ func Test_UniqueUnion(t *testing.T) {
 }
 
 func newFailingFilter[T any](message string) filters.Filter[T] {
-	return func(value T) result.Result[bool] {
+	return func(_ T) result.Result[bool] {
 		return result.Error[bool](errors.New(message))
 	}
 }

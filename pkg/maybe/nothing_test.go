@@ -30,7 +30,7 @@ func Test_Map_Noting(t *testing.T) {
 func Test_FlatMap_Nothing(t *testing.T) {
 	instance := maybe.Nothing[int]()
 	called := false
-	mapped := maybe.FlatMap(func(i int) maybe.Maybe[string] {
+	mapped := maybe.FlatMap(func(_ int) maybe.Maybe[string] {
 		called = true
 		return maybe.Just("ok")
 	}, instance)
