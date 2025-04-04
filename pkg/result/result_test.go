@@ -104,3 +104,32 @@ func Test_FromMaybe(t *testing.T) {
 	require.Error(t, rErr.Error())
 	require.ErrorContains(t, rErr.Error(), "failed")
 }
+
+type closer struct {
+	called bool
+}
+
+func (c *closer) Close() error {
+	c.called = true
+	return nil
+}
+
+func Test_CloseCloser(t *testing.T) {
+	c := &closer{}
+	closerResult := result.Ok(c)
+	err := result.Close(closerResult)
+	require.NoError(t, err)
+	require.True(t, c.called)
+}
+
+func Test_CloseNonCloser(t *testing.T) {
+	closerResult := result.Ok(99)
+	err := result.Close(closerResult)
+	require.NoError(t, err)
+}
+
+func Test_CloseError(t *testing.T) {
+	closerResult := result.Error[int](errors.New("failed"))
+	err := result.Close(closerResult)
+	require.NoError(t, err)
+}
