@@ -4,6 +4,8 @@
 package result
 
 import (
+	"io"
+
 	"github.com/sassoftware/sas-ggdk/pkg/errors"
 	"github.com/sassoftware/sas-ggdk/pkg/maybe"
 )
@@ -57,6 +59,21 @@ func As[T, S any](src Result[S]) Result[T] {
 		return Error[T](err)
 	}
 	return Ok(val)
+}
+
+// Close calls close on the encapsulated value if that value implements
+// io.Closer. It is a no-op if the value does not implement io.Closer or the
+// result encapsulates an error.
+func Close[T any](src Result[T]) error {
+	if src.IsError() {
+		return nil
+	}
+	v := any(src.MustGet())
+	closer, ok := v.(io.Closer)
+	if !ok {
+		return nil
+	}
+	return closer.Close()
 }
 
 // ErrorMapper defines a function that takes an error and returns an error.

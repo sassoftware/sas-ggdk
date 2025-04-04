@@ -3,7 +3,9 @@
 
 package result
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Ok returns a Result encapsulating the given value.
 func Ok[T any](value T) Result[T] {
@@ -45,6 +47,7 @@ func (o *ok[T]) get() T {
 	return o.value
 }
 
+// String returns a string representation of this Result.
 func (o *ok[T]) String() string {
 	return fmt.Sprintf("{Ok: %#v}", o.value)
 }
