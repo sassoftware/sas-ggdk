@@ -3,6 +3,10 @@
 
 package maybe
 
+import (
+	"io"
+)
+
 // Getter defines a function that gets the default value for a Maybe that
 // encapsulates an absent value.
 type Getter[T any] func() T
@@ -22,6 +26,37 @@ type Maybe[T any] interface {
 	// and returns the result of calling the given Getter function if the Maybe
 	// encapsulates nothing.
 	OrElseGet(getter Getter[T]) T
+}
+
+// As encapsulates the value in the given Maybe in a new Maybe of the target
+// type. If the given Maybe encapsulates nothing, or the encapsulated value does
+// not implement the requested type, then a Nothing Maybe will be returned of
+// the target type.
+func As[T, S any](src Maybe[S]) Maybe[T] {
+	if !src.IsJust() {
+		return Nothing[T]()
+	}
+	var v any = src.MustGet()
+	val, ok := v.(T)
+	if !ok {
+		return Nothing[T]()
+	}
+	return Just(val)
+}
+
+// Close calls close on the encapsulated value if that value implements
+// io.Closer. It is a no-op if the value encapsulates nothing or if the
+// encasuplated value does not implement io.Closer.
+func Close[T any](src Maybe[T]) error {
+	if !src.IsJust() {
+		return nil
+	}
+	v := any(src.MustGet())
+	closer, ok := v.(io.Closer)
+	if !ok {
+		return nil
+	}
+	return closer.Close()
 }
 
 // MapperNoError defines a function with one argument of any type that returns a
