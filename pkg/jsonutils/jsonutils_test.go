@@ -39,7 +39,7 @@ func Test_PrintJSONOn(t *testing.T) {
 	err = jsonutils.PrintJSONOn(instance, buffer)
 	require.NoError(t, err)
 	actual := buffer.Bytes()
-	require.Equal(t, expected, actual)
+	require.Equal(t, bytes.TrimSpace(expected), actual)
 }
 
 func Test_PrintJSONOn_fail(t *testing.T) {
@@ -65,7 +65,7 @@ func Test_ToJSON(t *testing.T) {
 	require.NoError(t, err)
 	actual := jsonutils.ToJSON(instance)
 	require.NoError(t, actual.Error())
-	require.Equal(t, expected, actual.MustGet())
+	require.Equal(t, strings.TrimSpace(expected), actual.MustGet())
 }
 
 func Test_ToJSON_fail(t *testing.T) {
@@ -83,8 +83,17 @@ func Test_ToJSON_fail(t *testing.T) {
 func Test_UnmarshalFromReader(t *testing.T) {
 	reader, err := toTestdataFile(jsonFilename)
 	require.NoError(t, err)
+	r := jsonutils.UnmarshalFromReader[person](reader)
+	require.False(t, r.IsError())
+	require.Equal(t, personName, r.MustGet().Name)
+	require.Equal(t, personAge, r.MustGet().Age)
+}
+
+func Test_UnmarshalFromReaderInto(t *testing.T) {
+	reader, err := toTestdataFile(jsonFilename)
+	require.NoError(t, err)
 	instance := new(person)
-	err = jsonutils.UnmarshalFromReader(reader, instance)
+	err = jsonutils.UnmarshalFromReaderInto(reader, instance)
 	require.NoError(t, err)
 	require.Equal(t, personName, instance.Name)
 	require.Equal(t, personAge, instance.Age)
@@ -98,13 +107,27 @@ func (reader *failingReader) Read(_ []byte) (n int, err error) {
 
 func Test_UnmarshalFromReader_failingReader(t *testing.T) {
 	reader := new(failingReader)
-	err := jsonutils.UnmarshalFromReader(reader, nil)
-	require.Error(t, err)
+	r := jsonutils.UnmarshalFromReader[int](reader)
+	require.True(t, r.IsError())
+	require.Error(t, r.Error())
 }
 
 func Test_UnmarshalFromReader_failingUnmarshal(t *testing.T) {
 	reader := strings.NewReader(`not JSON`)
-	err := jsonutils.UnmarshalFromReader(reader, nil)
+	r := jsonutils.UnmarshalFromReader[int](reader)
+	require.True(t, r.IsError())
+	require.Error(t, r.Error())
+}
+
+func Test_UnmarshalFromReaderInto_failingReader(t *testing.T) {
+	reader := new(failingReader)
+	err := jsonutils.UnmarshalFromReaderInto[int](reader, nil)
+	require.Error(t, err)
+}
+
+func Test_UnmarshalFromReaderInto_failingUnmarshal(t *testing.T) {
+	reader := strings.NewReader(`not JSON`)
+	err := jsonutils.UnmarshalFromReaderInto[int](reader, nil)
 	require.Error(t, err)
 }
 
@@ -131,6 +154,81 @@ func Test_LoadAs_ptr(t *testing.T) {
 func Test_LoadAs_fail(t *testing.T) {
 	actual := jsonutils.LoadAs[person](toTestdataFilename("missing.json"))
 	require.True(t, actual.IsError())
+}
+
+func Test_LoadWith(t *testing.T) {
+	expected := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	readF := func(_ string) ([]byte, error) {
+		return []byte(`{"name":"John Smith","age":75}`), nil
+	}
+	actual := jsonutils.LoadWith[person](readF, "/tmp/person.json")
+	require.False(t, actual.IsError())
+	require.Equal(t, expected, actual.MustGet())
+}
+
+func Test_LoadWith_ptr(t *testing.T) {
+	expectedPtr := &person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	readF := func(_ string) ([]byte, error) {
+		return []byte(`{"name":"John Smith","age":75}`), nil
+	}
+	actualPtr := jsonutils.LoadWith[*person](readF, "/tmp/person.json")
+	require.False(t, actualPtr.IsError())
+	require.Equal(t, expectedPtr, actualPtr.MustGet())
+}
+
+func Test_LoadWith_fail(t *testing.T) {
+	readF := func(_ string) ([]byte, error) {
+		return []byte{}, errors.New("failed")
+	}
+	actual := jsonutils.LoadWith[person](readF, "/tmp/missing.json")
+	require.True(t, actual.IsError())
+}
+
+func Test_Save(t *testing.T) {
+	instance := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	tmpdir := t.TempDir()
+	path := filepath.Join(tmpdir, "person.json")
+	err := jsonutils.Save(instance, path, 0700)
+	require.NoError(t, err)
+	defer func() { require.NoError(t, os.RemoveAll(tmpdir)) }()
+	_, err = os.Stat(path)
+	require.NoError(t, err)
+}
+
+func Test_SaveWith(t *testing.T) {
+	instance := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	called := false
+	saveF := func(_ string, _ []byte, _ os.FileMode) error {
+		called = true
+		return nil
+	}
+	err := jsonutils.SaveWith(saveF, instance, "/tmp/person.json", 0700)
+	require.NoError(t, err)
+	require.True(t, called)
+}
+
+func Test_SaveWith_failed(t *testing.T) {
+	instance := person{
+		Name: "John Smith",
+		Age:  75,
+	}
+	saveF := func(_ string, _ []byte, _ os.FileMode) error {
+		return errors.New("failed")
+	}
+	err := jsonutils.SaveWith(saveF, instance, "/tmp/person.json", 0700)
+	require.Error(t, err)
 }
 
 func Test_UnmarshalAs(t *testing.T) {
