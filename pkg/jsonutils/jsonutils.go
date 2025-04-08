@@ -12,10 +12,15 @@ import (
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 )
 
+const (
+	prefix = ``
+	indent = `    `
+)
+
 // PrintJSONOn pretty-prints the given data as JSON on the given writer. If the
 // given data is not valid JSON an error is returned.
 func PrintJSONOn[T any](data T, writer io.Writer) error {
-	bites := result.New(json.MarshalIndent(data, ``, `    `))
+	bites := result.New(json.MarshalIndent(data, prefix, indent))
 	return result.MapErrorOnly(func(b []byte) error {
 		_, err := fmt.Fprintf(writer, "%s", b)
 		return err
@@ -31,7 +36,7 @@ func PrintJSONOn[T any](data T, writer io.Writer) error {
 //
 //	result.New(json.MarshalIndent(data, ``, `    `))
 func ToJSON[T any](data T) result.Result[string] {
-	bites := result.New(json.MarshalIndent(data, ``, `    `))
+	bites := result.New(json.MarshalIndent(data, prefix, indent))
 	return result.MapNoError(func(b []byte) string { return string(b) }, bites)
 }
 
