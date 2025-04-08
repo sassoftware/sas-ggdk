@@ -70,8 +70,12 @@ make test-with-coverage
 
 ### Commits
 
-This project uses [semantic versioning](https://semver.org/) and [conventional
-commits](https://www.conventionalcommits.org/en/v1.0.0/).
+This project currently uses loose [semantic versioning](https://semver.org/) and
+[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). The API
+is undergoing rapid evolution until 1.0 is released. An evaluation will be made
+at that time as to how strictly semantic versioning will be followed. Efforts
+will be made to communicate breaking changes but please pin to a specific
+version until then.
 
 ## License
 
