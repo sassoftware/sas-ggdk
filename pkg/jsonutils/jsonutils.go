@@ -35,9 +35,9 @@ func ToJSON[T any](data T) result.Result[string] {
 	return result.MapNoError(func(b []byte) string { return string(b) }, bites)
 }
 
-// UnmarshalFromReader unmarshals the JSON in the given reader and populates a
-// new instance of T. If the data in the reader is not valid JSON an error is
-// returned.
+// UnmarshalFromReader unmarshals the JSON from the given reader and populates a
+// new instance of T. The reader will be read fully before returning. If the
+// data in the reader is not valid JSON an error is returned.
 func UnmarshalFromReader[T any](reader io.Reader) result.Result[T] {
 	bites := result.New(io.ReadAll(reader))
 	return result.FlatMap(UnmarshalAs[T], bites)
@@ -50,9 +50,9 @@ func UnmarshalAs[T any](content []byte) result.Result[T] {
 	return result.New(t, err)
 }
 
-// UnmarshalFromReaderInto unmarshals the JSON in the given reader and populates
-// the given instance. If the data in the reader is not valid JSON an error is
-// returned.
+// UnmarshalFromReaderInto unmarshals the JSON from the given reader and
+// populates the given instance. The reader will be read fully before returning.
+// If the data in the reader is not valid JSON an error is returned.
 func UnmarshalFromReaderInto[T any](reader io.Reader, value *T) error {
 	bites := result.New(io.ReadAll(reader))
 	return result.MapErrorOnly(func(b []byte) error {
@@ -84,11 +84,7 @@ func LoadWith[T any](
 // Save marshals the given T and writes it to a file at the given path with the
 // given permissions. The file is truncated if it exists.
 func Save[T any](value T, path string, perm os.FileMode) error {
-	content := result.New(json.Marshal(value))
-	writeF := func(b []byte) error {
-		return os.WriteFile(path, b, perm)
-	}
-	return result.MapErrorOnly(writeF, content)
+	return SaveWith(os.WriteFile, value, path, perm)
 }
 
 // SaveWith marshals the given T and calls the given writeFunc with the
