@@ -4,6 +4,7 @@
 package errors_test
 
 import (
+	"context"
 	stderrors "errors"
 	"fmt"
 	"os/exec"
@@ -64,7 +65,7 @@ func Test_Panic(t *testing.T) {
 }
 
 func Test_ProjectRoot(t *testing.T) {
-	root, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	root, err := exec.CommandContext(context.Background(), "git", "rev-parse", "--show-toplevel").Output()
 	require.NoError(t, err)
 	base := filepath.Base(string(root))
 	base = strings.TrimSpace(base)
