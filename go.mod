@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	golang.org/x/text v0.28.0
 )
 
