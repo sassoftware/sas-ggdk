@@ -44,7 +44,7 @@ jobs:
 
           notes-ref: 'gocoverage-${{ matrix.go_version }}-${{ matrix.os }}'
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: 'go-coverage'
           path: ${{ steps.coverage.outputs.report-pathname }}
