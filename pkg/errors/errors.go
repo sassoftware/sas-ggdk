@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText:  2021-2022, SAS Institute Inc., Cary, NC, USA.  All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package errors
+package errors // nolint revive
 
 import (
 	"errors"

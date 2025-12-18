@@ -5,4 +5,4 @@
 Package errors provides a multi-error that is aware of the source location it
 was created.
 */
-package errors
+package errors // nolint revive
