@@ -273,7 +273,7 @@ func toTestdataFile(element string) (*os.File, error) {
 }
 
 func toTestdataFilename(elements ...string) string {
-	s := []string{
+	s := []string{ // nolint: prealloc
 		`testdata`,
 	}
 	s = append(s, elements...)

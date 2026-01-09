@@ -72,7 +72,7 @@ func Test_NewWithAccessor(t *testing.T) {
 	require.NotNil(t, accessor)
 	instance.Add(20, 10, 50)
 	actual := accessor()
-	expected := []int{20, 10, 50}
+	expected := []int{20, 10, 50} // nolint: prealloc
 	require.Equal(t, expected, actual)
 	instance.Add(70)
 	actual = accessor()
