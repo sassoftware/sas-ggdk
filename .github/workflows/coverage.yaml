@@ -19,13 +19,13 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - name: Check out code
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
         with:
           # default fetch-depth is insufficient to find previous coverage notes
           fetch-depth: 10
 
       - name: Set up Go ${{ matrix.go_version }}
-        uses: actions/setup-go@v6.1.0
+        uses: actions/setup-go@v6.2.0
         with:
           go-version: ${{ matrix.go_version }}
 
