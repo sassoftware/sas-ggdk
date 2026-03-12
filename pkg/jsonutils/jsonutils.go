@@ -44,8 +44,9 @@ func ToJSON[T any](data T) result.Result[string] {
 // new instance of T. The reader will be read fully before returning. If the
 // data in the reader is not valid JSON an error is returned.
 func UnmarshalFromReader[T any](reader io.Reader) result.Result[T] {
-	bites := result.New(io.ReadAll(reader))
-	return result.FlatMap(UnmarshalAs[T], bites)
+	var t T
+	err := json.NewDecoder(reader).Decode(&t)
+	return result.New(t, err)
 }
 
 // UnmarshalAs ummarshals the given content into a result of a new instance of T.
@@ -57,12 +58,11 @@ func UnmarshalAs[T any](content []byte) result.Result[T] {
 
 // UnmarshalFromReaderInto unmarshals the JSON from the given reader and
 // populates the given instance. The reader will be read fully before returning.
-// If the data in the reader is not valid JSON an error is returned.
+// If the data in the reader is not valid JSON an error is returned. Note: This
+// function remains for backward compatibility. Prefer using
+// `json.NewDecoder(reader).Decode(value)`.
 func UnmarshalFromReaderInto[T any](reader io.Reader, value *T) error {
-	bites := result.New(io.ReadAll(reader))
-	return result.MapErrorOnly(func(b []byte) error {
-		return json.Unmarshal(b, value)
-	}, bites)
+	return json.NewDecoder(reader).Decode(value)
 }
 
 // LoadAs reads the content from the given path and ummarshals it into a result

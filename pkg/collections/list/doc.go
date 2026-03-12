@@ -6,4 +6,5 @@ Package list defines the List struct, an implementation of the Collection
 interface, and supporting functions. A List is a collection of comparable items
 that maintains the order of the addition of those items.
 */
+// nolint: revive
 package list
