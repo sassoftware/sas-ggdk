@@ -9,7 +9,8 @@ is unmarashaled from JSON into a T.
 
 In addition to the response body, if the type T implements the
 ResponseHeaderSetter interface then the response headers will be set on the T
-before it is returned.
+before it is returned. Note that the type used with DoAsJSON must match the
+receiver of the SetResponseHeaders method for that method to be called.
 
 StatusCodes greater than 299 are converted to errors.
 
@@ -27,8 +28,9 @@ Example:
 		Field2 string `json:"field2"`
 		headers http.Header
 	}
-	func (d *data) SetResponseHeaders(headers http.Header) {
+	func (d *data) SetResponseHeaders(headers http.Header) *data {
 		d.headers = headers
+		return d
 	}
 	func main() {
 		req, err := http.NewRequest(http.MethodGet, "https://example.com", nil)

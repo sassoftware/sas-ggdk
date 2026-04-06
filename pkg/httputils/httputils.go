@@ -62,7 +62,7 @@ func do[T any](c *http.Client, req *http.Request, unmarshal func(*http.Response)
 	unmarshaledResponse = result.ErrorMap(addRequestContextToError(req), unmarshaledResponse)
 
 	// Provide response headers to the caller if T implements the
-	// SetResponseHeaders method.
+	// ResponseHeaderSetter interface.
 	return result.MapNoError2(setResponseHeaders, unmarshaledResponse, res)
 }
 
@@ -96,17 +96,21 @@ func addRequestContextToError(req *http.Request) func(error) error {
 
 // ResponseHeaderSetter defines an interface for types that can have response
 // headers set on them. This is used to provide response headers to the caller
-// if the type returned by DoAsJSON implements this interface.
-type ResponseHeaderSetter interface {
-	SetResponseHeaders(http.Header) //nolint:inamedparam
+// if the type returned by DoAsJSON implements this interface. The
+// SetResponseHeaders method returns a T so that the method can have a value
+// receiver. If the receiver is a pointer, then the type used with DoAsJson
+// should be a pointer type.
+type ResponseHeaderSetter[T any] interface {
+	SetResponseHeaders(http.Header) T //nolint:inamedparam
 }
 
-// setResponseHeaders checks if T implements the SetResponseHeaders method and,
-// if so, calls it with the response headers from the given http.Response.
+// setResponseHeaders checks if T implements the ResponseHeaderSetter interface
+// and, if so, calls the SetResponseHeaders method with the response headers
+// from the given http.Response.
 func setResponseHeaders[T any](t T, r *http.Response) T {
-	setter, ok := any(t).(ResponseHeaderSetter)
+	setter, ok := any(t).(ResponseHeaderSetter[T])
 	if ok {
-		setter.SetResponseHeaders(r.Header)
+		return setter.SetResponseHeaders(r.Header)
 	}
 	return t
 }
