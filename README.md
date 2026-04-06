@@ -14,6 +14,7 @@ package for information about that package.
 * [errors](./pkg/errors/doc.go)
 * [filters](./pkg/filters/doc.go)
 * [folders](./pkg/folders/doc.go)
+* [httputils](./pkg/httputils/doc.go)
 * [jsonutils](./pkg/jsonutils/doc.go)
 * [maputils](./pkg/maputils/doc.go)
 * [maybe](./pkg/maybe/doc.go)
