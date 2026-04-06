@@ -43,8 +43,6 @@ func TestDoAsJSON(t *testing.T) {
 	d := httputils.DoAsJSON[data](server.Client(), req)
 	require.False(t, d.IsError(), "Expected successful response")
 	require.Equal(t, "Hello, World!", d.MustGet().Message, "Expected message to match")
-	// No headers provided because the method is on a pointer receiver.
-	require.Empty(t, d.MustGet().headers)
 }
 
 func TestDoAsJSONFailed(t *testing.T) {
@@ -62,7 +60,7 @@ func TestDoAsJSONFailed(t *testing.T) {
 	require.ErrorContains(t, d.Error(), expectedMessage)
 }
 
-func TestDoAsJSONResponseHeaders(t *testing.T) {
+func TestDoAsJSONSetResponseHeadersPointer(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"message": "Hello, World!"}`))
@@ -70,8 +68,22 @@ func TestDoAsJSONResponseHeaders(t *testing.T) {
 	defer server.Close()
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, server.URL, nil)
 	require.NoError(t, err)
-	// Use the pointer form to get the SetResponseHeaders method called.
-	d := httputils.DoAsJSON[*data](server.Client(), req)
+	d := httputils.DoAsJSON[*dataSetResponseHeadersPointerReceiver](server.Client(), req)
+	require.False(t, d.IsError(), "Expected successful response")
+	require.Equal(t, "Hello, World!", d.MustGet().Message, "Expected message to match")
+	require.Len(t, d.MustGet().headers, 3)
+	require.Equal(t, "28", d.MustGet().headers.Get("Content-Length"))
+}
+
+func TestDoAsJSONSetResponseHeadersValue(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"message": "Hello, World!"}`))
+	}))
+	defer server.Close()
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, server.URL, nil)
+	require.NoError(t, err)
+	d := httputils.DoAsJSON[dataSetResponseHeadersValueReceiver](server.Client(), req)
 	require.False(t, d.IsError(), "Expected successful response")
 	require.Equal(t, "Hello, World!", d.MustGet().Message, "Expected message to match")
 	require.Len(t, d.MustGet().headers, 3)
@@ -200,11 +212,30 @@ func (f *failedReader) Read(_ []byte) (int, error) {
 
 type data struct {
 	Message string `json:"message"`
+}
+
+type dataSetResponseHeadersPointerReceiver struct {
+	Message string `json:"message"`
 	headers http.Header
 }
 
-func (d *data) SetResponseHeaders(headers http.Header) {
+func (d *dataSetResponseHeadersPointerReceiver) SetResponseHeaders(
+	headers http.Header,
+) *dataSetResponseHeadersPointerReceiver {
 	d.headers = headers
+	return d
+}
+
+type dataSetResponseHeadersValueReceiver struct {
+	Message string `json:"message"`
+	headers http.Header
+}
+
+func (d dataSetResponseHeadersValueReceiver) SetResponseHeaders(
+	headers http.Header,
+) dataSetResponseHeadersValueReceiver {
+	d.headers = headers
+	return d
 }
 
 func getPort(_url string) string {
