@@ -1,4 +1,10 @@
 
+<a name="v0.4.1"></a>
+## [v0.4.1] - 2026-04-07
+### Bug Fixes
+- deprecating DoNoResponse in favor of DoNoResponseBody ([#51](https://gitlab.sas.com/convoy/sas-ddk/issues/51))
+
+
 <a name="v0.4.0"></a>
 ## [v0.4.0] - 2026-04-07
 ### Features
@@ -69,7 +75,8 @@
 - initial commit
 
 
-[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.0...HEAD
+[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.1...HEAD
+[v0.4.1]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.1.0...v0.2.0
