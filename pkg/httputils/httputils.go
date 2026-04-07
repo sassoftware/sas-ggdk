@@ -39,6 +39,16 @@ func DoAsString(c *http.Client, req *http.Request) result.Result[string] {
 	return do[string](c, req, getResponseBodyAsString)
 }
 
+// DoNoResponse executes the HTTP request using the given client and returns an
+// error if the request fails (status code > 299) or nil if it succeeds. The
+// response body is closed before returning.
+func DoNoResponse(c *http.Client, req *http.Request) error {
+	res := Do(c, req)
+	return result.MapErrorOnly(func(res *http.Response) error {
+		return res.Body.Close()
+	}, res)
+}
+
 // do performs the given HTTP request with the given HTTP client and returns a
 // Result containing the response as processed by the given unmarshal function.
 // StatusCodes greater than 299 are converted to errors with the response body
