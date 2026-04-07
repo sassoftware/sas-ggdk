@@ -1,4 +1,10 @@
 
+<a name="v0.4.0"></a>
+## [v0.4.0] - 2026-04-07
+### Features
+- add httputils DoNoResponse ([#49](https://gitlab.sas.com/convoy/sas-ddk/issues/49))
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0] - 2026-04-06
 ### Features
@@ -63,6 +69,7 @@
 - initial commit
 
 
-[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.3.0...HEAD
+[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.0...HEAD
+[v0.4.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.1.0...v0.2.0
