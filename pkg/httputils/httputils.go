@@ -39,10 +39,15 @@ func DoAsString(c *http.Client, req *http.Request) result.Result[string] {
 	return do[string](c, req, getResponseBodyAsString)
 }
 
-// DoNoResponse executes the HTTP request using the given client and returns an
-// error if the request fails (status code > 299) or nil if it succeeds. The
-// response body is closed before returning.
+// DoNoResponse is deprecated and will be removed. Use DoNoResponseBody instead.
 func DoNoResponse(c *http.Client, req *http.Request) error {
+	return DoNoResponseBody(c, req)
+}
+
+// DoNoResponseBody executes the HTTP request using the given client and returns
+// an error if the request fails (status code > 299) or nil if it succeeds. The
+// response body is closed before returning.
+func DoNoResponseBody(c *http.Client, req *http.Request) error {
 	res := Do(c, req)
 	return result.MapErrorOnly(func(res *http.Response) error {
 		return res.Body.Close()
