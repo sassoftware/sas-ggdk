@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestDoRaw(t *testing.T) {
+func TestDo(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"message": "Hello, World!"}`))
@@ -202,6 +202,32 @@ func TestDoAsString(t *testing.T) {
 	s := httputils.DoAsString(server.Client(), req)
 	require.False(t, s.IsError(), "Expected successful response")
 	require.JSONEq(t, `{"message": "Hello, World!"}`, s.MustGet(), "Expected message to match")
+}
+
+func TestDoNoResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"message": "Hello, World!"}`))
+	}))
+	defer server.Close()
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, server.URL, nil)
+	require.NoError(t, err)
+	err = httputils.DoNoResponse(server.Client(), req)
+	require.NoError(t, err)
+}
+
+func TestDoNoResponseFailure(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusForbidden)
+		_, _ = w.Write([]byte(`Forbidden`))
+	}))
+	defer server.Close()
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, server.URL, nil)
+	require.NoError(t, err)
+	err = httputils.DoNoResponse(server.Client(), req)
+	expectedPort := getPort(server.URL)
+	expectedMessage := fmt.Sprintf("GET http://127.0.0.1:%s failed\n Caused by:\n\t* 403 Forbidden", expectedPort)
+	require.ErrorContains(t, err, expectedMessage)
 }
 
 type failedReader struct{}
