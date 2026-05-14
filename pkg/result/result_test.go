@@ -8,6 +8,7 @@ import (
 
 	"github.com/sassoftware/sas-ggdk/pkg/errors"
 	"github.com/sassoftware/sas-ggdk/pkg/maybe"
+	"github.com/sassoftware/sas-ggdk/pkg/pointer"
 	"github.com/sassoftware/sas-ggdk/pkg/result"
 	"github.com/stretchr/testify/require"
 )
@@ -132,4 +133,33 @@ func Test_CloseError(t *testing.T) {
 	closerResult := result.Error[int](errors.New("failed"))
 	err := result.Close(closerResult)
 	require.NoError(t, err)
+}
+
+func Test_Split(t *testing.T) {
+	rI := result.Ok(1)
+	actualI, errI := result.Split(rI)
+	require.NoError(t, errI)
+	require.Equal(t, 1, actualI)
+	rI = result.Error[int](errors.New("failed int"))
+	actualI, errI = result.Split(rI)
+	require.EqualError(t, errI, "failed int")
+	require.Equal(t, 0, actualI)
+
+	rS := result.Ok("string")
+	actualS, errS := result.Split(rS)
+	require.NoError(t, errS)
+	require.Equal(t, "string", actualS)
+	rS = result.Error[string](errors.New("failed string"))
+	actualS, errS = result.Split(rS)
+	require.EqualError(t, errS, "failed string")
+	require.Empty(t, actualS)
+
+	rP := result.Ok(pointer.Ptr("pointer"))
+	actualP, errP := result.Split(rP)
+	require.NoError(t, errP)
+	require.Equal(t, "pointer", *actualP)
+	rP = result.Error[*string](errors.New("failed pointer"))
+	actualP, errP = result.Split(rP)
+	require.EqualError(t, errP, "failed pointer")
+	require.Equal(t, (*string)(nil), actualP)
 }
