@@ -1,4 +1,17 @@
 
+<a name="v0.5.0"></a>
+## [v0.5.0] - 2026-05-14
+### Features
+- **result:** add split function ([#56](https://gitlab.sas.com/convoy/sas-ddk/issues/56))
+
+### Documentation
+- update contributor agreement ([#54](https://gitlab.sas.com/convoy/sas-ddk/issues/54))
+
+### Build Changes
+- **deps:** bump golang.org/x/text in the gomod group ([#55](https://gitlab.sas.com/convoy/sas-ddk/issues/55))
+- **deps:** bump golang.org/x/text in the gomod group ([#53](https://gitlab.sas.com/convoy/sas-ddk/issues/53))
+
+
 <a name="v0.4.1"></a>
 ## [v0.4.1] - 2026-04-07
 ### Bug Fixes
@@ -75,7 +88,8 @@
 - initial commit
 
 
-[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.1...HEAD
+[Unreleased]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.5.0...HEAD
+[v0.5.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://gitlab.sas.com/convoy/sas-ddk/compare/v0.2.0...v0.3.0
