@@ -45,6 +45,16 @@ func New[T any](value T, err error) Result[T] {
 	return Ok(value)
 }
 
+// Split splits a result into its value part and error part. If the Result
+// encapsulates an error then the zero value of T will be returned.
+func Split[T any](r Result[T]) (T, error) {
+	if r.IsError() {
+		var t T
+		return t, r.Error()
+	}
+	return r.MustGet(), nil
+}
+
 // As encapsulates the value in the given Result in a new Result of the target
 // type. If the given Result encapsulates an error then an Error Result will be
 // returned of the target type encapsulating the original error.
