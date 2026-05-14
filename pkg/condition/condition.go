@@ -20,7 +20,7 @@ func IsNil(i any) bool {
 		reflect.Func,
 		reflect.Interface,
 		reflect.Map,
-		reflect.Ptr,
+		reflect.Pointer,
 		reflect.Slice:
 		return value.IsNil()
 	}
