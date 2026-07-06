@@ -17,9 +17,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Go stable
-        uses: actions/setup-go@v6.4.0
+        uses: actions/setup-go@v6.5.0
         with:
           go-version: stable
 
       - name: Lint with golangci-lint
-        uses: golangci/golangci-lint-action@v9.2.1
+        uses: golangci/golangci-lint-action@v9.3.0
